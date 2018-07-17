@@ -1,10 +1,9 @@
-let findEvenIndex (inp:int array)  = 
-    match inp with
-        | [||] -> 0
-        | _ ->  inp |> Array.toList 
-                |> List.scan (fun (leftsum, focus, rightsum) v -> (leftsum + focus, v, rightsum-v ) ) (0,0,Array.sum inp)
+let findEvenIndex = function
+    | [||] -> 0
+    | inp ->    inp |> Array.toList
+                |> List.scan (fun (leftsum,focus,rightsum) v -> (leftsum + focus,v,rightsum-v)) (0,0,Array.sum inp)
                 |> List.tail
-                |> List.tryFindIndex (fun (leftsum, _, rightsum) -> leftsum = rightsum)
+                |> List.tryFindIndex (fun (leftsum,_,rightsum) -> leftsum = rightsum )
                 |> Option.defaultValue -1
 
 findEvenIndex [|1; 2; 3; 4; 3; 2; 1|]   // 3
