@@ -1,39 +1,39 @@
-(* let rot90CounterIndex max (x:int, y:int) =
-    max-y,x
-
-
-rot90CounterIndex 3 (1,2)
-
-let rot90Counter (s: string) =
-    let s' = s.Split '\n' 
-             |> (fun s' -> Array2D.init (Array.length s') (Array.length s') (fun x y -> s'.[y].[x]))
-    Array2D.mapi(fun x y v -> s') s'
-*)
-
 let rot90CounterIndex max (x:int, y:int) =
-    [|y;max-x|]
+    max-y,x
+let diag_2_symIndex max (x:int, y:int) =
+    max-y,max-x
 
-let diag_2_sym max (x:int, y:int) =
-    [|max-y;x|]
-(*
-let oper (fcn:int->(int*int)->int []) (s:string) = 
-    s.Split '\n'
-        |> (fun s' -> Array2D.init (s'.Length) (s'.Length) (fun x y -> s'.[x].[y] ))
-        |> (fun matrix -> Array2D.init (Array2D.length1 matrix) (Array2D.length2 matrix) (fun x y -> matrix.GetValue (fcn ((Array2D.length1 matrix)-1) (x,y) )))
-*)
+let getChar (arr:string[]) (x,y) =
+    arr.[y].[x]
 
-    [|for i in 1..4 ->
-        for j in 1..4 ->
-            yield rot90CounterIndex 4 (i,j)|]
+let oper func (s: string) =
+    let s' = s.Split '\n' 
+    let dim = (Array.length s')-1
+    seq { for y in 0..dim do 
+            for x in 0..dim do
+                yield getChar s' (func dim (x,y)) 
+            yield '\n'
+    }  |> Array.ofSeq |> System.String |> (fun s -> s.TrimEnd '\n')
 
-seq { for i in 0..4 ->  }
 
 let rot90Counter (s: string) =
     s |> oper rot90CounterIndex
     
 let diag2Sym (s: string) =
-    s |> oper diag_2_sym
-let selfieDiag2Counterclock (s: string) =
-    (diag2Sym s) + (rot90Counter s)
+    s |> oper diag_2_symIndex
+
+let combineArray (a1:string[]) (a2:string[]) = 
+    match a2 with
+    | [||] -> a1
+    | _ -> Array.mapi (fun i v -> v + "|" + a2.[i] ) a1
+
+let combinecubes (cubes:string list) = 
+    List.fold  (fun s (v:string) -> (v.Split '\n')::s) [] cubes
+    |> List.fold  (fun s (v:string[]) -> combineArray v s) [||]
+    |> String.concat "\n" 
     
-rot90Counter "abcd\nefgh\nijkl\nmnop"
+let selfieDiag2Counterclock (s: string) =
+    combinecubes [s; (diag2Sym s) ; (rot90Counter s)]
+
+
+selfieDiag2Counterclock "NJVGhr\nMObsvw\ntPhCtl\nsoEnhi\nrtQRLK\nzjliWg"
