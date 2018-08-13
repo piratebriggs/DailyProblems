@@ -26,7 +26,7 @@ let diag2Sym (s: string) =
 let combineArray (a1:string[]) (a2:string[]) = 
     match a2 with
     | [||] -> a1
-    | _ -> Array.mapi (fun i v -> v + "|" + a2.[i] ) a1
+    | _ -> Array.map2 (fun v1 v2 -> v1 + "|" + v2 ) a1 a2
 
 let combinecubes (cubes:string list) = 
     List.fold  (fun s (v:string) -> (v.Split '\n')::s) [] cubes
