@@ -6,7 +6,7 @@ let diag_2_symIndex max (x:int, y:int) =
 let getChar (arr:string[]) (x,y) =
     arr.[y].[x]
 
-let oper func (s: string) =
+let oper' func (s: string) =
     let s' = s.Split '\n' 
     let dim = (Array.length s')-1
     seq { for y in 0..dim do 
@@ -15,12 +15,13 @@ let oper func (s: string) =
             yield '\n'
     }  |> Array.ofSeq |> System.String |> (fun s -> s.TrimEnd '\n')
 
-
+let oper func s = 
+    func s
 let rot90Counter (s: string) =
-    s |> oper rot90CounterIndex
+    s |> oper' rot90CounterIndex
     
 let diag2Sym (s: string) =
-    s |> oper diag_2_symIndex
+    s |> oper' diag_2_symIndex
 
 let combineArray (a1:string[]) (a2:string[]) = 
     match a2 with
@@ -37,3 +38,8 @@ let selfieDiag2Counterclock (s: string) =
 
 
 selfieDiag2Counterclock "NJVGhr\nMObsvw\ntPhCtl\nsoEnhi\nrtQRLK\nzjliWg"
+let rot90Counter2 (s: string) =
+    s.Split([|'\n'|]) |> Array.map (fun x -> x.ToCharArray() |> Seq.toList) |> Seq.toList |> transpos
+
+rot90Counter2 "NJVGhr\nMObsvw\ntPhCtl\nsoEnhi\nrtQRLK\nzjliWg"
+
