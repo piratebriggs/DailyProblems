@@ -35,11 +35,26 @@ let combinecubes (cubes:string list) =
     
 let selfieDiag2Counterclock (s: string) =
     combinecubes [s; (diag2Sym s) ; (rot90Counter s)]
-
-
+ 
 selfieDiag2Counterclock "NJVGhr\nMObsvw\ntPhCtl\nsoEnhi\nrtQRLK\nzjliWg"
+
+(* Scratch Area *)
+
+// 
+let string2squarearray (s:string) = 
+    s.Split '\n' |> Array.map (fun v -> Seq.toArray v)
+
+let squarearray2string (a:char[][]) = 
+    Array.fold (fun s (v:char[]) -> s + "\n" + (new System.String (v))) "" a 
+    |> (fun s -> s.TrimStart '\n')
+
+
+// alternative using char list list and a transpose function
+let rec transpos = function
+    | (_::_)::_ as m -> List.map List.head m :: transpos (List.map List.tail m)
+    | _ -> []
+    
 let rot90Counter2 (s: string) =
     s.Split([|'\n'|]) |> Array.map (fun x -> x.ToCharArray() |> Seq.toList) |> Seq.toList |> transpos
 
 rot90Counter2 "NJVGhr\nMObsvw\ntPhCtl\nsoEnhi\nrtQRLK\nzjliWg"
-
